@@ -1,7 +1,15 @@
-const Dep = require('./Observer').Dep
+import { Dep } from './Observer'
+import MVVM from './MVVM'
 
-class Watcher {
-  constructor(vm, expOrFn, cb) {
+export default class Watcher {
+  private vm: MVVM
+  private expOrFn: string | Function
+  private cb: Function
+  private deps: { [key: string]: Dep }
+
+  private getter: Function
+  private value: any
+  constructor(vm: MVVM, expOrFn: string | Function, cb: Function) {
     this.vm = vm
     this.expOrFn = expOrFn
     this.cb = cb
@@ -26,7 +34,7 @@ class Watcher {
     }
   }
 
-  addDep(dep) {
+  addDep(dep: Dep) {
     if (!this.deps.hasOwnProperty(dep.id)) {
       dep.addWatcher(this)
       this.deps[dep.id] = dep
@@ -40,13 +48,13 @@ class Watcher {
     return value
   }
 
-  parseGetter(exp) {
+  parseGetter(exp: string) {
     if (/[^\w.$]/.test(exp)) {
       return 
     }
 
     const exps = exp.split('.')
-    return function (obj) {
+    return function (obj: any) {
       for (let i = 0; i < exps.length; i += 1) {
         if (!obj) {return}
         obj = obj[exps[i]]
@@ -56,5 +64,3 @@ class Watcher {
     }
   }
 }
-
-module.exports = Watcher
