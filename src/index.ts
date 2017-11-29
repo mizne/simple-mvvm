@@ -6,6 +6,7 @@ const vm: any = new MVVM({
   el: 'body',
   data: {
     greet: 'hello',
+    showText: true,
     test: {
       a: {
         b: {
@@ -15,8 +16,8 @@ const vm: any = new MVVM({
     }
   },
   methods: {
-    changeText() {
-      this.greet = ''
+    toggleShow() {
+      this.showText = !this.showText
     }
   }
 })
